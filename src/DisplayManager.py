@@ -1,6 +1,7 @@
 from dotenv import dotenv_values
 from threading import Thread
 from time import sleep, time
+import logging
 
 from src.SpotifyAPI import SpotifyAPI
 from src.SpotifyPlayer import SpotifyPlayer
@@ -14,7 +15,8 @@ class DisplayManager:
     def __init__(self, config, fps):
         env = dotenv_values(fetch_content_path('.env'))
         if not env:
-            raise Exception("No environment file found, has the .env file been modified?")
+            logging.error("No environment file found, has the .env file been modified?")
+            exit(1)
 
         self.player = SpotifyPlayer(config, fps)
         self.fetch_delay = max(int(env["SPOTIFY_FETCH_DELAY"]), 1 / fps)

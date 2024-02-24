@@ -44,11 +44,19 @@ class SpotifyAPI:
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
-        self.port = int(server_port)
+        self.port = int(server_port) if server_port else None
+
+        self._check_configuration()
 
         self.refresh_token = ""
         self.token = ""
         self.expires = -1
+
+    def _check_configuration(self):
+        if not all([self.client_id, self.client_secret, self.redirect_uri, self.port]):
+            logging.error(
+                f"{SpotifyAPI.LOGGING_PREFIX} Configuration not completed for Spotify API, check your .env file")
+            exit(1)
 
     def fetch_token(self):
         url = self.SPOTIFY_API_URL + "/authorize?"
