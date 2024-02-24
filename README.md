@@ -33,8 +33,8 @@ You'll also need the [SteelSeries GG](https://fr.steelseries.com/gg/engine) soft
 
 **📄 <ins>Note :</ins> When you launch the program for the first time, a web page will open to authorize the spotify api to connect to your account.**
 ### ℹ️ How to launch the application at startup?
-1. Press `Win + R` to open the "Run" dialog.
-2. Create a new file with a `.vbs` extension (e.g. SpotifyLinker.vbs).
+1. Press `Win + R` to open the "Run" dialog and type `shell:startup`.
+2. Create a new file in `Startup folder` with a `.vbs` extension (e.g. SpotifyLinker.vbs).
 3. Copy and paste the code provided below into the file, making sure to replace "C:\Path\To\start.bat" path with the actual path to your `start.bat` file.
 ```VBS
 Set WshShell = CreateObject("WScript.Shell")
