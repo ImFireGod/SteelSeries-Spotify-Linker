@@ -25,6 +25,9 @@ class ScrollableText:
         if self.max_step != 0 and self.intern_step > self.max_step:
             self.intern_step = 0
 
+    def set_step(self, step):
+        self.intern_step = min(max(0, step), self.max_step)
+
     def will_it_change(self):
         if not self.need_scrolling:
             return False

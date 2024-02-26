@@ -39,6 +39,8 @@ class SpotifyPlayer:
         self.song_duration = song_duration
         self.changed = True
         self.step = 0
+        self.title.set_step(0)
+        self.artist.set_step(0)
 
     def is_playing(self):
         return self.song_position != self.song_duration
