@@ -59,15 +59,15 @@ class SpotifyAPI:
             exit(1)
 
     def fetch_token(self):
-        url = self.SPOTIFY_API_URL + "/authorize?"
-        url += urlencode({
-            "scope": "user-read-playback-state user-read-currently-playing",
-            "response_type": "code",
-            "client_id": self.client_id,
-            "redirect_uri": self.redirect_uri
-        })
-
         if not self.load_token():
+            url = self.SPOTIFY_API_URL + "/authorize?"
+            url += urlencode({
+                "scope": "user-read-playback-state user-read-currently-playing",
+                "response_type": "code",
+                "client_id": self.client_id,
+                "redirect_uri": self.redirect_uri
+            })
+
             server = self.start_server()
             webbrowser.open(url)
             server.handle_request()
