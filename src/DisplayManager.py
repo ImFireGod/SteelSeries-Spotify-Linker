@@ -30,6 +30,10 @@ class DisplayManager:
             env['LOCAL_PORT']
         )
 
+        self.display_clock = True
+        self.display_player = True
+        self.enabled = True
+
         self.fps = fps
         self.state = 0
 
@@ -39,24 +43,29 @@ class DisplayManager:
     def run(self):
         i = self.fetch_delay + 1
         while True:
-            if i > self.fetch_delay:
-                thread = Thread(target=self._fetch_and_update_song, args=(self.spotify_api, self.player))
+            if not self.enabled:
+                continue
+
+            if i > self.fetch_delay and self.display_player:
+                thread = Thread(target=self._fetch_and_update_song, daemon=True, args=(self.spotify_api, self.player))
                 thread.start()
                 i = 0
 
             if not self.player.paused:
                 self.state = 1
 
-            if self.state == 0:
+            frame_data = None
+            if (self.state == 0 or not self.display_player) and self.display_clock:
                 frame_data = convert_to_bitmap(self.timer.get_image().getdata())
-            else:
+            elif self.display_player:
                 frame_data = convert_to_bitmap(self.player.next_step().getdata())
                 if self.player.pause_started and (round(time() * 1000) - self.player.pause_started) > self.timer_threshold:
                     self.player.pause_started = 0
                     self.state = 0
 
-            thread = Thread(target=self.send_frame, args=(self.steelseries_api, frame_data))
-            thread.start()
+            if frame_data is not None:
+                thread = Thread(target=self.send_frame, daemon=True, args=(self.steelseries_api, frame_data))
+                thread.start()
 
             sleep(1 / self.fps)
             i += 1 / self.fps
