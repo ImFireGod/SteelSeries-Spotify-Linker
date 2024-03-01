@@ -1,12 +1,8 @@
-from src.utils import fetch_content_path
-
-from PIL import ImageFont
 
 
 class ScrollableText:
-    DEFAULT_FONT = ImageFont.truetype(fetch_content_path('./fonts/MunroSmall.ttf'), size=10)
 
-    def __init__(self, config, content="", pos_y=0, font=DEFAULT_FONT):
+    def __init__(self, config, font, content="", pos_y=0):
         self.content = None
         self.font = None
 

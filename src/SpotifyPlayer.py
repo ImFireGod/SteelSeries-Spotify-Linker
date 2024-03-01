@@ -8,7 +8,7 @@ from src.utils import fetch_content_path
 class SpotifyPlayer:
     ARTIST_FONT = ImageFont.truetype(font=fetch_content_path('fonts/MunroSmall.ttf'), size=10)
     TITLE_FONT = ImageFont.truetype(font=fetch_content_path('fonts/VerdanaBold.ttf'), size=11)
-    DURATION_FONT = ImageFont.truetype(font=fetch_content_path('fonts/MunroSmall.ttf'), size=10)
+    DURATION_FONT = ARTIST_FONT
 
     def __init__(self, config, fps=None):
         self.config = config
@@ -17,8 +17,8 @@ class SpotifyPlayer:
         self.step = 0
 
         self.scrollbar_region = (self.config.scrollbar_padding, 24, self.config.width - self.config.scrollbar_padding + 1, 30)
-        self.artist = ScrollableText(self.config, "", 3, self.ARTIST_FONT)
-        self.title = ScrollableText(self.config, "", 15, self.TITLE_FONT)
+        self.artist = ScrollableText(self.config, self.ARTIST_FONT, "", 3)
+        self.title = ScrollableText(self.config, self.TITLE_FONT, "", 15)
 
         self.paused = True
         self.pause_started = 0
