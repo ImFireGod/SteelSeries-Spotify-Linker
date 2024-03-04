@@ -6,11 +6,12 @@ from src.utils import fetch_content_path
 
 
 class SpotifyPlayer:
-    ARTIST_FONT = ImageFont.truetype(font=fetch_content_path('fonts/MunroSmall.ttf'), size=10)
-    TITLE_FONT = ImageFont.truetype(font=fetch_content_path('fonts/VerdanaBold.ttf'), size=11)
-    DURATION_FONT = ARTIST_FONT
-
     def __init__(self, config, fps=None):
+        self.ARTIST_FONT = ImageFont.truetype(font=fetch_content_path('fonts/MunroSmall.ttf'), size=10)
+        self.TITLE_FONT = ImageFont.truetype(
+            font=fetch_content_path('fonts/VerdanaBoldExtended.ttf' if config.use_extended_font else 'fonts/VerdanaBold.ttf'), size=11)
+        self.DURATION_FONT = self.ARTIST_FONT
+
         self.config = config
 
         self.fps = fps

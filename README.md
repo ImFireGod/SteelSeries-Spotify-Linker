@@ -61,6 +61,7 @@ DATE_FORMAT=12        # Choose between 12-hour or 24-hour format
 DISPLAY_SECONDS=true  # Set to 'true' to display seconds, 'false' to hide them
 TIMER_THRESHOLD=2     # Set the number of seconds after which the clock will appear after pausing the song
 SPOTIFY_FETCH_DELAY=2 # Represents the delay in seconds between each spotify API request
+EXTENDED_FONT=true    # Support for special characters (Japanese)
 ```
 > ⚠️ You can reduce the time between requests to the Spotify API. But be careful, if you reduce it too much, the application may not work properly. The Spotify API could block it due to throughput limits. By default, this interval is set to 2 seconds to ensure that you never exceed this limit, but feel free to adjust it to suit your needs. For more information, please visit the [Spotify Rate Limits](https://developer.spotify.com/documentation/web-api/concepts/rate-limits).
 

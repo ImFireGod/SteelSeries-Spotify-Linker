@@ -9,6 +9,7 @@ from src.SteelSeriesAPI import SteelSeriesAPI
 from src.Timer import Timer
 from src.image_utils import convert_to_bitmap
 from src.utils import fetch_content_path
+from src.Config import Config
 
 
 class DisplayManager:
@@ -18,10 +19,12 @@ class DisplayManager:
             logging.error("No environment file found, has the .env file been modified?")
             exit(1)
 
+        config.use_extended_font = Config.convert_boolean(env['EXTENDED_FONT'])
+
         self.player = SpotifyPlayer(config, fps)
         self.fetch_delay = max(int(env["SPOTIFY_FETCH_DELAY"]), 1 / fps)
         self.steelseries_api = SteelSeriesAPI()
-        self.timer = Timer(config, env["DATE_FORMAT"], env["DISPLAY_SECONDS"].lower() in ("true", "yes", "1"))
+        self.timer = Timer(config, env["DATE_FORMAT"], Config.convert_boolean(env["DISPLAY_SECONDS"]))
         self.timer_threshold = int(env["TIMER_THRESHOLD"]) * 1000
         self.spotify_api = SpotifyAPI(
             env['SPOTIFY_CLIENT_ID'],
@@ -59,7 +62,8 @@ class DisplayManager:
                 frame_data = convert_to_bitmap(self.timer.get_image().getdata())
             elif self.display_player:
                 frame_data = convert_to_bitmap(self.player.next_step().getdata())
-                if self.player.pause_started and (round(time() * 1000) - self.player.pause_started) > self.timer_threshold:
+                if self.player.pause_started and (
+                        round(time() * 1000) - self.player.pause_started) > self.timer_threshold:
                     self.player.pause_started = 0
                     self.state = 0
 
