@@ -29,3 +29,6 @@ class Timer:
         else:
             formatted_time = strftime("%H:%M" + seconds, current_time)
         return formatted_time
+    
+    def set_display_seconds(self, display_seconds):
+        self.display_seconds = display_seconds

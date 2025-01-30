@@ -2,7 +2,7 @@ import logging
 import os
 from threading import Thread
 from PIL import Image
-from pystray import MenuItem as item, Icon
+from pystray import MenuItem as Item, Icon
 
 from src.DisplayManager import DisplayManager
 from src.utils import fetch_content_path
@@ -25,18 +25,20 @@ def toggle_player(icon):
 
 def update_menu(icon):
     menu = (
-        item("Exit", exit_app),
-        item("Display Clock", toggle_clock, checked=lambda item:icon.manager.display_clock),
-        item("Display Player", toggle_player, checked= lambda item:icon.manager.display_player)
+        Item("Exit", exit_app),
+        Item("Display Clock", toggle_clock, checked=lambda item: icon.manager.display_clock),
+        Item("Display Player", toggle_player, checked=lambda item: icon.manager.display_player),
+        Item("Update configuration", icon.manager.update_config)
     )
     icon.menu = menu
 
 
 def run_systray_async(display_manager: DisplayManager):
     menu = (
-        item("Exit", exit_app),
-        item("Display Clock", toggle_clock, checked=lambda item: display_manager.display_clock),
-        item("Display Player", toggle_player, checked=lambda item: icon.manager.display_player)
+        Item("Exit", exit_app),
+        Item("Display Clock", toggle_clock, checked=lambda item: display_manager.display_clock),
+        Item("Display Player", toggle_player, checked=lambda item: icon.manager.display_player),
+        Item("Update configuration", display_manager.update_config)
     )
 
     icon = Icon("name", Image.open(fetch_content_path("./assets/icon.png")), "Spotify Linker", menu)

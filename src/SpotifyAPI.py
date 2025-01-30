@@ -37,7 +37,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 class SpotifyAPI:
-    LOGGING_PREFIX = "[SPOTIFY]"
+    LOGGING_PREFIX = "[SpotifyAPI]"
     SPOTIFY_API_URL = "https://accounts.spotify.com"
 
     def __init__(self, client_id, client_secret, redirect_uri, server_port):

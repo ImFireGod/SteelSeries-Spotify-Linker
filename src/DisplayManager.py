@@ -74,6 +74,20 @@ class DisplayManager:
             sleep(1 / self.fps)
             i += 1 / self.fps
 
+    def update_config(self):
+        env = dotenv_values(fetch_content_path('.env'))
+        if not env:
+            logging.error("No environment file found, has the .env file been modified?")
+            exit(1)
+
+        logging.info("[SpotifyLinker] Configuration updated")
+
+        self.fetch_delay = max(int(env["SPOTIFY_FETCH_DELAY"]), 1 / self.fps)
+        self.timer_threshold = int(env["TIMER_THRESHOLD"]) * 1000
+        self.timer.set_display_seconds(Config.convert_boolean(env["DISPLAY_SECONDS"]))
+        self.timer.date_format = env["DATE_FORMAT"]
+
+
     @staticmethod
     def _fetch_and_update_song(spotify_api, player):
         song_data = spotify_api.fetch_song()
