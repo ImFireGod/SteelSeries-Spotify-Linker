@@ -17,20 +17,21 @@ SteelSeries Spotify Linker is a project designed to display the current music pl
 - Retrieves the currently playing music on Spotify via the API.
 - Automatically updates the OLED display with the current track information.
 - Features automatic scrolling titles, a progress bar, and displays elapsed time and duration.
-- Clock display if no music is playing or if music has been paused for too long (configurable)
+- Displays a clock if no music is playing or if the music has been paused for too long (configurable)
 - Different clock display modes (12-hour or 24-hour)
 - Easily configurable via the system tray menu
 
 ## 🛠️ Prerequisites
-You'll need Python version 3.8 or higher, which can be installed from [here](https://www.python.org/downloads/).
-You'll also need the [SteelSeries GG](https://fr.steelseries.com/gg/engine) software.
+You'll need Python version 3.8 or higher, which can be installed from [here](https://www.python.org/downloads/). <br>You'll also need the [SteelSeries GG](https://fr.steelseries.com/gg/engine) software.
 
 ## 🚀 Installation
 1. Download the [latest version](https://github.com/ImFireGod/SteelSeries-Spotify-Linker/releases/latest) of the program and extract the files.
-2. Run `install.bat` to start the installation prompt and set up your Spotify credentials.<br>For detailed instructions, refer to  "[Spotify API configuration](CONFIGURE_SPOTIFY_API.md)".
+2. Run `install.bat` to start the installation prompt and set up your Spotify credentials.<br>For detailed instructions, refer to "[Spotify API configuration](CONFIGURE_SPOTIFY_API.md)".
 3. You can now launch the application from the Windows Startup menu.
 
-**📄 <ins>Note :</ins> When you launch the program for the first time, a web page will open to authorize the spotify api to connect to your account.**
+**📄 <ins>Note :</ins> When you launch the program for the first time, a web page will open to authorize the Spotify API to connect to your account.**
+
+> ⚠️ If you want to uninstall the application, don't forget to exit it first using the button in the system tray.
 
 #### ℹ️ Additional Installation Information  
 
@@ -41,10 +42,15 @@ If you haven't configured your Spotify credentials, an error message will appear
 3. Close the error message.  
 4. Restart the application. 
 
+
+### 🐛 Debug Mode
+
+A debug mode is available in the software folder `launcher_debug` (by default, the installation path is `C:\Program Files\SpotifyLinker`). This will allow you to view the output for troubleshooting purposes.
+
 ## ⚙ Configuration
 The configuration file is stored in `%APPDATA%/SpotifyLinker`.
 To configure the Spotify API, refer to [Spotify API configuration](CONFIGURE_SPOTIFY_API.md).
-```JSON
+```JS
 {
   ...
   "date_format": 12,        // Choose between 12-hour or 24-hour format
@@ -56,7 +62,7 @@ To configure the Spotify API, refer to [Spotify API configuration](CONFIGURE_SPO
   "display_player": true
 }
 ```
-> ⚠️ You can reduce the time between requests to the Spotify API. But be careful, if you reduce it too much, the application may not work properly. The Spotify API could block it due to throughput limits. By default, this interval is set to 2 seconds to ensure that you never exceed this limit, but feel free to adjust it to suit your needs. For more information, please visit the [Spotify Rate Limits](https://developer.spotify.com/documentation/web-api/concepts/rate-limits).
+> ⚠️ You can reduce the time between requests to the Spotify API. But be careful, if you reduce it too much, the application may not work properly. The Spotify API may block it due to rate limits. By default, this interval is set to 2 seconds to ensure that you never exceed this limit, but feel free to adjust it to suit your needs. For more information, please visit the [Spotify Rate Limits](https://developer.spotify.com/documentation/web-api/concepts/rate-limits).
 
 ## 📝 Information
 Music display may take some time due to API limitations. Data is retrieved by default every 2 seconds via Spotify's API, so there may be a slight desynchronization.
