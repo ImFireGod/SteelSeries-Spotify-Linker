@@ -33,7 +33,7 @@ You'll need Python version 3.8 or higher, which can be installed from [here](htt
 
 > ⚠️ If you want to uninstall the application, don't forget to exit it first using the button in the system tray.
 
-#### ℹ️ Additional Installation Information  
+## ℹ️ Additional Installation Information  
 
 If you haven't configured your Spotify credentials, an error message will appear when launching the application. **Do not close it immediately!**  
 
