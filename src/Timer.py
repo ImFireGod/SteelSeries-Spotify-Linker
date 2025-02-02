@@ -32,3 +32,6 @@ class Timer:
     
     def set_display_seconds(self, display_seconds):
         self.display_seconds = display_seconds
+
+    def set_date_format(self, date_format):
+        self.date_format = date_format if date_format == 12 else "24"

@@ -1,0 +1,21 @@
+IDI_ICON1 ICON "../assets/icon.ico"
+
+1 VERSIONINFO
+FILEVERSION     1,2,0
+PRODUCTVERSION  1,2,0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName", "Firewe"
+            VALUE "FileDescription", "Spotify Linker Launcher"
+            VALUE "FileVersion", "1.2.0"
+            VALUE "InternalName", "launcher"
+            VALUE "LegalCopyright", "© 2025 Firewe"
+            VALUE "OriginalFilename", "launcher.exe"
+            VALUE "ProductName", "Spotify Linker"
+            VALUE "ProductVersion", "1.2.0"
+        END
+    END
+END
