@@ -196,8 +196,7 @@ def add_to_startup_registry(installation_path):
         print("Added to startup registry with additional information.")
     except Exception as e:
         print(f"Error adding to startup registry: {e}")
-
-    add_to_startup_registry()
+        abort_installation()
 
 def add_to_registry(installation_path):
     uninstall_exe = os.path.join(installation_path, "uninstall.exe")
@@ -244,8 +243,8 @@ if __name__ == "__main__":
     # Ask to add to startup
     add_to_startup(shortcut)
     add_startup = input("Do you want to add SpotifyLinker to startup? (Y/n) ").strip().lower()
-    if add_startup == "y":
-        add_to_startup_registry()
+    if add_startup != "n":
+        add_to_startup_registry(installation_path)
 
     # Add to registry
     print("Adding to registry...")
