@@ -4,11 +4,13 @@ from requests import get, post
 from base64 import b64encode
 from time import time
 from json import loads, dumps
+import ctypes
 import webbrowser
 import logging
 
-from src.utils import fetch_content_path
+from src.utils import fetch_app_data_path
 
+logger = logging.getLogger('SpotifyAPI')
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -19,7 +21,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
             res = parse_qs(urlparse(self.path).query)
             if res.get('error') is not None:
-                logging.error(SpotifyAPI.LOGGING_PREFIX + " An error has occurred while connecting to your spotify account")
+                logger.error("An error has occurred while connecting to your spotify account")
                 exit(1)
 
             self.server.code = res['code'][0]
@@ -37,14 +39,14 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 class SpotifyAPI:
-    LOGGING_PREFIX = "[SPOTIFY]"
     SPOTIFY_API_URL = "https://accounts.spotify.com"
 
-    def __init__(self, client_id, client_secret, redirect_uri, server_port):
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.redirect_uri = redirect_uri
-        self.port = int(server_port) if server_port else None
+    def __init__(self, config):
+        self.config = config
+        self.client_id = self.config.get_preference('spotify_client_id')
+        self.client_secret = self.config.get_preference('spotify_client_secret')
+        self.redirect_uri = self.config.get_preference('spotify_redirect_uri')            
+        self.port = self.config.get_preference('local_port')
 
         self._check_configuration()
 
@@ -54,8 +56,8 @@ class SpotifyAPI:
 
     def _check_configuration(self):
         if not all([self.client_id, self.client_secret, self.redirect_uri, self.port]):
-            logging.error(
-                f"{SpotifyAPI.LOGGING_PREFIX} Configuration not completed for Spotify API, check your .env file")
+            logger.error(f"Configuration not completed for Spotify API, check configuration file : {self.config.config_path}")
+            ctypes.windll.user32.MessageBoxW(0, f"Configuration not completed for Spotify API, check configuration file at {self.config.config_path}", "Error", 0x10)
             exit(1)
 
     def fetch_token(self):
@@ -79,39 +81,39 @@ class SpotifyAPI:
 
     def load_token(self):
         try:
-            with open(fetch_content_path("credentials.json"), "r") as f:
+            with open(fetch_app_data_path("credentials.json"), "r") as f:
                 data = loads(f.readline())
 
                 if not data.get('refresh_token'):
-                    logging.warning(self.LOGGING_PREFIX + " Cannot find refresh token...")
+                    logger.warning("Cannot find refresh token...")
                     return False
 
                 if not data.get('token'):
-                    logging.warning(self.LOGGING_PREFIX + " Cannot find token...")
+                    logger.warning("Cannot find token...")
                     return False
 
                 self.refresh_token = data['refresh_token']
                 self.token = data['token']
                 self.expires = data['expires']
-                logging.info(self.LOGGING_PREFIX + " Use Spotify token from file")
+                logger.info("Use Spotify token from file")
                 return True
         except OSError:
-            logging.warning(self.LOGGING_PREFIX + " Could not use file to fetch Spotify token...")
+            logger.warning("Could not use file to fetch Spotify token...")
         return False
 
     def save_token(self):
         try:
-            with open(fetch_content_path("credentials.json"), "w") as outfile:
+            with open(fetch_app_data_path("credentials.json"), "w") as outfile:
                 outfile.write(dumps({
                     "refresh_token": self.refresh_token,
                     "token": self.token,
                     "expires": self.expires
                 }, separators=(',', ':')))
 
-                logging.info(self.LOGGING_PREFIX + " Spotify token saved")
+                logger.info("Spotify token saved")
                 self.update_token_if_expired()
         except OSError:
-            logging.warning(self.LOGGING_PREFIX + " Could not write Spotify token in a file...")
+            logger.warning("Could not write Spotify token in a file...")
 
     def retrieve_token(self, code=None, refresh=False):
         if refresh:
@@ -166,7 +168,7 @@ class SpotifyAPI:
         )
 
         if req.status_code == 429:
-            logging.warning(self.LOGGING_PREFIX + " Rate limit exceeded! Please adjust the Spotify fetch delay")
+            logger.warning("Rate limit exceeded! Please adjust the Spotify fetch delay")
             return None
 
         if req.status_code == 204:

@@ -9,10 +9,9 @@ GAME_DISPLAY_NAME = "SteelSeries Spotify Linker"
 AUTHOR = "Firewe"
 EVENT = "UPDATE"
 
+logger = logging.getLogger("SteelSeriesAPI")
 
 class SteelSeriesAPI:
-    LOGGING_PREFIX = "[SteelSeriesAPI]"
-
     def __init__(self):
         self.path = path.join(environ.get('PROGRAMDATA'), 'SteelSeries', 'SteelSeries Engine 3', 'coreProps.json')
         self.address = ""
@@ -26,15 +25,12 @@ class SteelSeriesAPI:
                     self.address = "http://" + loads(f.readline())["address"]
                     self.register_game()
                     self.bind_game_event()
-                    logging.info(self.LOGGING_PREFIX + " Found local address API : " + self.address)
+                    logger.info("Found local address API : " + self.address)
                     return self.address
             except ConnectionError:
-                logging.error(
-                    self.LOGGING_PREFIX + " Could not connect to API, is steelseries engine running? Retry in 5s...")
+                logger.error("Could not connect to API, is steelseries engine running? Retry in 5s...")
             except OSError:
-                logging.error(
-                    self.LOGGING_PREFIX + "Could not register application, is steelseries engine running? Retry in "
-                                          "5s...")
+                logger.error("Could not register application, is steelseries engine running? Retry in 5s...")
 
             fetched = False
             sleep(5)
@@ -56,7 +52,7 @@ class SteelSeriesAPI:
             }]
         })
 
-        logging.info(self.LOGGING_PREFIX + " Binding game event")
+        logger.info("Binding game event")
 
     def send_frame(self, image):
         self.send_data("/game_event", {

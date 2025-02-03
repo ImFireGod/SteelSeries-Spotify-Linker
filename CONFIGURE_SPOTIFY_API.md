@@ -15,13 +15,17 @@ This section provides a step-by-step guide on how to set up a Spotify applicatio
 ![spotify_app_dashboard](https://github.com/ImFireGod/SteelSeries-Spotify-Linker/assets/49344172/e3ee8d60-12f2-49f8-a268-9f32b726b1f5)
 
 
-7. Then paste this information into the `.env` file.
-```ENV
-SPOTIFY_CLIENT_ID=YOUR_SPOTIFY_CLIENT_ID
-SPOTIFY_CLIENT_SECRET=YOUR_SPOTIFY_CLIENT_SECRET
-SPOTIFY_REDIRECT_URI=http://localhost:2408/callback
-LOCAL_PORT=2408 # Local port must match with the spotify redirect uri
+7. Configuration  
 
-[Configuration]
-# ...
+Copy and paste the following information into the `config.json` file or follow the installation prompt from `install.bat`.  
+
+```JS
+{
+    "spotify_client_id": "SPOTIFY_CLIENT_ID",
+    "spotify_client_secret": "YOUR_SPOTIFY_CLIENT_SECRET",
+    "spotify_redirect_uri": "http://localhost:2408/callback",
+    "local_port": 2408,
+    ...
+}
 ```
+> ⚠️ Local port must match with the spotify redirect uri

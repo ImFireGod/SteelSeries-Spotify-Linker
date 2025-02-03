@@ -1,45 +1,51 @@
-from dotenv import dotenv_values
 from threading import Thread
 from time import sleep, time
 import logging
+import ctypes
 
 from src.SpotifyAPI import SpotifyAPI
 from src.SpotifyPlayer import SpotifyPlayer
 from src.SteelSeriesAPI import SteelSeriesAPI
 from src.Timer import Timer
 from src.image_utils import convert_to_bitmap
-from src.utils import fetch_content_path
-from src.Config import Config
+from src.UserPreferences import UserPreferences
+from src.Systray import run_systray_async
 
+
+logger = logging.getLogger("SpotifyLinker")
+
+class State:
+    SHOW_CLOCK = 0
+    SHOW_PLAYER = 1 
 
 class DisplayManager:
     def __init__(self, config, fps):
-        env = dotenv_values(fetch_content_path('.env'))
-        if not env:
-            logging.error("No environment file found, has the .env file been modified?")
-            exit(1)
+        self.fps = fps
+        self.state = State.SHOW_CLOCK
 
-        config.use_extended_font = Config.convert_boolean(env['EXTENDED_FONT'])
-
-        self.player = SpotifyPlayer(config, fps)
-        self.fetch_delay = max(int(env["SPOTIFY_FETCH_DELAY"]), 1 / fps)
-        self.steelseries_api = SteelSeriesAPI()
-        self.timer = Timer(config, env["DATE_FORMAT"], Config.convert_boolean(env["DISPLAY_SECONDS"]))
-        self.timer_threshold = int(env["TIMER_THRESHOLD"]) * 1000
-        self.spotify_api = SpotifyAPI(
-            env['SPOTIFY_CLIENT_ID'],
-            env['SPOTIFY_CLIENT_SECRET'],
-            env['SPOTIFY_REDIRECT_URI'],
-            env['LOCAL_PORT']
-        )
-
+        self.enabled = True
         self.display_clock = True
         self.display_player = True
-        self.enabled = True
 
-        self.fps = fps
-        self.state = 0
+        self.user_preferences = UserPreferences()
+        self.timer = Timer(config, self.user_preferences.get_preference('date_format'), self.user_preferences.get_preference('display_seconds'))
+        self.player = SpotifyPlayer(config, fps)
+        
+        # Load systray menu
+        run_systray_async(self)
 
+        self.load_preferences()
+        self.steelseries_api = SteelSeriesAPI()
+        self.spotify_api = SpotifyAPI(self.user_preferences)
+
+    def load_preferences(self):
+        self.user_preferences.load_preferences()
+
+        self.fetch_delay = max(int(self.user_preferences.get_preference('spotify_fetch_delay')), 1 / self.fps)
+        self.timer_threshold = max(self.user_preferences.get_preference('timer_threshold'), 0) * 1000
+        self.display_clock = self.user_preferences.get_preference('display_timer')
+        self.display_player = self.user_preferences.get_preference('display_player')
+        
     def init(self):
         self.spotify_api.fetch_token()
 
@@ -55,17 +61,17 @@ class DisplayManager:
                 i = 0
 
             if not self.player.paused:
-                self.state = 1
+                self.state = State.SHOW_PLAYER
 
             frame_data = None
-            if (self.state == 0 or not self.display_player) and self.display_clock:
+            if (self.state == State.SHOW_CLOCK or not self.display_player) and self.display_clock:
                 frame_data = convert_to_bitmap(self.timer.get_image().getdata())
             elif self.display_player:
                 frame_data = convert_to_bitmap(self.player.next_step().getdata())
                 if self.player.pause_started and (
                         round(time() * 1000) - self.player.pause_started) > self.timer_threshold:
                     self.player.pause_started = 0
-                    self.state = 0
+                    self.state = State.SHOW_CLOCK
 
             if frame_data is not None:
                 thread = Thread(target=self.send_frame, daemon=True, args=(self.steelseries_api, frame_data))
@@ -73,6 +79,23 @@ class DisplayManager:
 
             sleep(1 / self.fps)
             i += 1 / self.fps
+
+    def update_config(self):
+        if not self.user_preferences.load_preferences():
+            logger.error("Failed to update configuration")
+            return
+        
+        logger.info("Configuration updated")
+
+        self.fetch_delay = max(int(self.user_preferences.get_preference('spotify_fetch_delay')), 1 / self.fps)
+        self.timer_threshold = self.user_preferences.get_preference('timer_threshold') * 1000
+        self.timer.set_display_seconds(self.user_preferences.get_preference('display_seconds'))
+        self.timer.set_date_format(self.user_preferences.get_preference('date_format'))
+
+        self.display_clock = self.user_preferences.get_preference('display_timer')
+        self.display_player = self.user_preferences.get_preference('display_player')
+
+        ctypes.windll.user32.MessageBoxW(0, "Configuration successfully updated", "Info", 0x40 | 0x1)
 
     @staticmethod
     def _fetch_and_update_song(spotify_api, player):
