@@ -17,7 +17,7 @@ This section provides a step-by-step guide on how to set up a Spotify applicatio
 
 7. Configuration  
 
-Copy and paste the following information into the `config.json` file or follow the installation prompt from `install.bat`.  
+Copy and paste the following information into the `config.json` file (located in %APPDATA%\SpotifyLinker) or follow the installation prompt from `install.bat`.  
 
 ```JS
 {
