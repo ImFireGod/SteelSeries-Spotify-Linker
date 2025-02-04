@@ -1,7 +1,7 @@
 # 🎵 SteelSeries Spotify Linker
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
-![GitHub License](https://img.shields.io/github/license/ImFireGod/SteelSeries-Spotify-Linker?style=for-the-badge)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/ImFireGod/SteelSeries-Spotify-Linker/total?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/Firewee/SteelSeries-Spotify-Linker?style=for-the-badge)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Firewee/SteelSeries-Spotify-Linker/total?style=for-the-badge)
 
 SteelSeries Spotify Linker is a project designed to display the current music playing on **Spotify** on a SteelSeries keyboard with an **OLED** display. Presently, it supports only **128x40 displays** (e.g. Apex Pro).
 <br/>
