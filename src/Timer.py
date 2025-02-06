@@ -24,7 +24,7 @@ class Timer:
     def get_current_time(self):
         current_time = localtime()
         seconds = ":%S" if self.display_seconds else ""
-        if self.date_format == "12":
+        if self.date_format == 12:
             formatted_time = strftime("%I:%M" + seconds + " %p", current_time)
         else:
             formatted_time = strftime("%H:%M" + seconds, current_time)
@@ -34,4 +34,4 @@ class Timer:
         self.display_seconds = display_seconds
 
     def set_date_format(self, date_format):
-        self.date_format = date_format if date_format == 12 else "24"
+        self.date_format = date_format if date_format == 12 else 24
