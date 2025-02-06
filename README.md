@@ -57,7 +57,7 @@ To configure the Spotify API, refer to [Spotify API configuration](CONFIGURE_SPO
   "display_seconds": true,  // Set to 'true' to display seconds, 'false' to hide 
   "timer_threshold": 2,     // Set the number of seconds after which the clock will appear after pausing the song
   "spotify_fetch_delay": 2, // Represents the delay in seconds between each spotify API request
-  "extended_font": true,    // Support for special characters (Japanese)
+  "extended_font": true,    // Support for special characters (Japanese) [Requires a reboot]
   "display_timer": true,
   "display_player": true
 }
