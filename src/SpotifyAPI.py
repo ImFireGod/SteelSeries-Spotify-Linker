@@ -46,7 +46,7 @@ class SpotifyAPI:
         self.client_id = self.config.get_preference('spotify_client_id')
         self.client_secret = self.config.get_preference('spotify_client_secret')
         self.redirect_uri = self.config.get_preference('spotify_redirect_uri')            
-        self.port = self.config.get_preference('local_port')
+        self.port = int(self.config.get_preference('local_port'))
 
         self._check_configuration()
 

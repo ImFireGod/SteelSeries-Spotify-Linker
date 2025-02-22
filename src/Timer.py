@@ -9,7 +9,7 @@ class Timer:
 
     def __init__(self, config, date_format, display_seconds):
         self.config = config
-        self.date_format = date_format
+        self.date_format = int(date_format)
         self.display_seconds = display_seconds
 
     def get_image(self):
