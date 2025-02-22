@@ -44,7 +44,7 @@ class DisplayManager:
     
     def update_preferences(self):
         self.fetch_delay = max(int(self.user_preferences.get_preference('spotify_fetch_delay')), 1 / self.fps)
-        self.timer_threshold = max(self.user_preferences.get_preference('timer_threshold'), 0) * 1000
+        self.timer_threshold = max(int(self.user_preferences.get_preference('timer_threshold')), 0) * 1000
 
         self.display_clock = self.user_preferences.get_preference('display_timer')
         self.display_player = self.user_preferences.get_preference('display_player')
